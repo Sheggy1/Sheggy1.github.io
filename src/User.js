@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useEffect, useState } from 'react';
+import './App.css';
 
 function User() {
+  const [username, setUsername] = useState('');
 
-    const [username, setUsername] = useState("");
-    
-    useEffect(() => {
-        setUsername(window.prompt("Please enter your name" , ""));
-    }, []);
+  useEffect(() => {
+    setUsername(window.prompt('Введи своє ім*я', ''));
+  }, []);
 
-    return(
-        <div className="userName"> {username} </div>
-    )
+  return <div className="userName"> {username} </div>;
 }
 
 export default User;

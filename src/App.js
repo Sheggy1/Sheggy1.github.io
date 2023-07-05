@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import "./App.css";
-import Food from "./components/Food";
-import Snake from "./components/Snake";
+import { useEffect, useRef, useState } from 'react';
+import './App.css';
+import Food from './components/Food';
+import Snake from './components/Snake';
+import axios from 'axios';
 
 const randomFoodPosition = () => {
   const pos = { x: 0, y: 0 };
@@ -22,21 +23,38 @@ const extraRandomFoodPosition = () => {
 };
 
 function App() {
+  const sendScoreToServer = async (username, score) => {
+    try {
+      await axios.post('http://localhost:3000/snakegame', {
+        username,
+        score,
+      });
+      console.log('Рахунок було відправлено на сервер');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const initialSnake = {
     snake: [
       { x: 0, y: 0 },
       { x: 4, y: 0 },
       { x: 8, y: 0 },
     ],
-    direction: "ArrowRight",
+    direction: 'ArrowRight',
     speed: 100,
   };
 
   const [snake, setSnake] = useState(initialSnake.snake);
-  const [lastDirection, setLastDirection] = useState(initialSnake.direction);
-  const [foodPosition, setFoodPosition] = useState(randomFoodPosition());
+  const [lastDirection, setLastDirection] = useState(
+    initialSnake.direction,
+  );
+  const [foodPosition, setFoodPosition] = useState(
+    randomFoodPosition(),
+  );
   const [extraFoodPosition, setExtraFoodPosition] = useState(null);
-  const [bonusExtraFoodPosition, setBonusExtraFoodPosition] = useState(null);
+  const [bonusExtraFoodPosition, setBonusExtraFoodPosition] =
+    useState(null);
   const [isStarted, setIsStarted] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const playgroundRef = useRef();
@@ -44,21 +62,25 @@ function App() {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
+    if (gameOver && score > 0) {
+      sendScoreToServer("Player", score);
+    }
+
     if (!isStarted) return;
 
     const handleKeyDown = (e) => {
-      if (e.key === " ") {
+      if (e.key === ' ') {
         setIsPaused(!isPaused);
       } else {
         setLastDirection(e.key);
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isStarted, isPaused]);
+  }, [isStarted, isPaused, gameOver, score]);
 
   useEffect(() => {
     if (!isStarted || isPaused) return;
@@ -90,16 +112,16 @@ function App() {
         y = tmpSnake[tmpSnake.length - 1].y;
 
       switch (lastDirection) {
-        case "ArrowUp":
+        case 'ArrowUp':
           y -= 4;
           break;
-        case "ArrowRight":
+        case 'ArrowRight':
           x += 4;
           break;
-        case "ArrowDown":
+        case 'ArrowDown':
           y += 4;
           break;
-        case "ArrowLeft":
+        case 'ArrowLeft':
           x -= 4;
           break;
         default:
@@ -108,7 +130,8 @@ function App() {
 
       const newHead = { x, y };
       const collidedWithSelf = tmpSnake.some(
-        (bodyPart) => bodyPart.x === newHead.x && bodyPart.y === newHead.y
+        (bodyPart) =>
+          bodyPart.x === newHead.x && bodyPart.y === newHead.y,
       );
 
       if (
@@ -197,7 +220,9 @@ function App() {
           >
             Start
           </button>
-          <div className="arrow-msg text">Press Arrow keys to play!</div>
+          <div className="arrow-msg text">
+            Press Arrow keys to play!
+          </div>
         </>
       )}
 
@@ -225,21 +250,37 @@ function App() {
       {!gameOver && <Food position={foodPosition} key="food" />}
 
       {!gameOver && extraFoodPosition && (
-        <Food position={extraFoodPosition} isExtraFood={true} key="extra-food" />
+        <Food
+          position={extraFoodPosition}
+          isExtraFood={true}
+          key="extra-food"
+        />
       )}
 
       {!gameOver && bonusExtraFoodPosition && (
-        <Food position={bonusExtraFoodPosition} isExtraFood={true} key="bonus-food" />
+        <Food
+          position={bonusExtraFoodPosition}
+          isExtraFood={true}
+          key="bonus-food"
+        />
       )}
 
       {!gameOver && !isPaused && (
-        <button className="pauseBtn" onClick={togglePause} type="submit">
+        <button
+          className="pauseBtn"
+          onClick={togglePause}
+          type="submit"
+        >
           Pause
         </button>
       )}
 
       {!gameOver && isPaused && (
-        <button className="pauseBtn" onClick={togglePause} type="submit">
+        <button
+          className="pauseBtn"
+          onClick={togglePause}
+          type="submit"
+        >
           Resume
         </button>
       )}
