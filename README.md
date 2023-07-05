@@ -1,4 +1,16 @@
-# Getting Started with Create React App
+Gameplay:
+
+![snakegamevideo](https://github.com/Sheggy1/SnakeGame/assets/43640476/edef4471-3bc3-436d-9bed-c3fc3265d3ff)
+
+
+Results adding to the PostgreSQL when the game ends:
+
+![photo_2023-07-05_16-29-08](https://github.com/Sheggy1/SnakeGame/assets/43640476/ffac4848-0d6c-4fc8-93d0-4061de9dbfdd)
+
+
+
+
+ Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
