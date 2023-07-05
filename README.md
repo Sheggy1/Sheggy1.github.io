@@ -1,3 +1,5 @@
+When the game are loaded - user can set his personal name
+
 Gameplay:
 
 ![snakegamevideo](https://github.com/Sheggy1/SnakeGame/assets/43640476/edef4471-3bc3-436d-9bed-c3fc3265d3ff)
